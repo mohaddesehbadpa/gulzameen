@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Puzzle Quest - Gulzameen</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { color-scheme: dark; }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background: radial-gradient(circle at top, #f7f0dc 0%, #e7d1b2 35%, #c69f6b 100%);
+            color: #2f1f0f;
+            min-height: 100vh;
+        }
+        .page-shell {
+            display: grid;
+            gap: 24px;
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 18px;
+            padding: 18px 20px;
+            border-radius: 24px;
+            background: rgba(255,255,255,0.9);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+        }
+        .header h1 { margin: 0; font-size: clamp(1.8rem, 2.8vw, 2.6rem); }
+        .header a { color: #8b4513; text-decoration: none; font-weight: 700; }
+        .game-panel { display: grid; gap: 24px; }
+        .card {
+            background: rgba(255,255,255,0.95);
+            border: 1px solid rgba(183, 129, 69, 0.25);
+            border-radius: 28px;
+            padding: 24px;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.08);
+        }
+        .intro-card p { margin: 0; line-height: 1.85; color: #5b4031; }
+        .puzzle-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 24px;
+        }
+        .selection-panel {
+            display: grid;
+            gap: 18px;
+        }
+        .preview-card {
+            border-radius: 20px;
+            padding: 18px;
+            border: 1px solid rgba(139, 69, 19, 0.18);
+            background: #fff7ef;
+        }
+        .preview-card img {
+            width: 100%;
+            border-radius: 18px;
+            display: block;
+        }
+        .thumbnails {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+        }
+        .thumbnail {
+            border: 2px solid transparent;
+            border-radius: 14px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+        .thumbnail.selected { border-color: #b97b37; transform: translateY(-2px); }
+        .thumbnail img { width: 100%; display: block; }
+        .board-wrapper {
+            border-radius: 24px;
+            overflow: hidden;
+            background: #fdf3ea;
+            padding: 20px;
+            display: grid;
+            gap: 18px;
+        }
+        .puzzle-board {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 6px;
+            width: 100%;
+            max-width: 640px;
+        }
+        .puzzle-piece {
+            position: relative;
+            aspect-ratio: 1 / 1;
+            border-radius: 12px;
+            background-size: 400% 400%;
+            cursor: pointer;
+            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        .puzzle-piece:hover { transform: translateY(-1px); box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1); }
+        .puzzle-piece.selected { outline: 3px solid #b97b37; }
+        .controls { display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between; align-items: center; }
+        .controls .btn { padding: 14px 24px; border-radius: 999px; border: none; background: #b97b37; color: white; font-weight: 700; cursor: pointer; transition: transform 0.2s ease; }
+        .controls .btn:hover { transform: translateY(-1px); }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+        .stat-block {
+            background: #fff5eb;
+            border: 1px solid rgba(139, 69, 19, 0.18);
+            border-radius: 18px;
+            padding: 18px;
+            text-align: center;
+        }
+        .stat-block .label { display: block; font-size: 0.9rem; color: #6c4a30; margin-bottom: 8px; }
+        .stat-block .value { font-size: 1.8rem; font-weight: 800; color: #7a481f; }
+        .message { color: #6c422d; font-weight: 700; }
+        @media (max-width: 980px) { .puzzle-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 640px) { .thumbnails { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    </style>
+</head>
+<body>
+    <div class="page-shell">
+        <header class="header card">
+            <div>
+                <h1>Image Puzzle Quest</h1>
+                <p>Choose one of the cultural images below and solve it in 16 easy, friendly puzzle pieces.</p>
+            </div>
+            <a href="/">Return to Home</a>
+        </header>
+
+        <main class="game-panel">
+            <section class="card intro-card">
+                <div class="puzzle-grid">
+                    <div class="selection-panel">
+                        <h2>Select your puzzle</h2>
+                        <p>Pick one of the eight available images and then press Start to scramble it into 16 pieces.</p>
+                        <div class="thumbnails" id="thumbnailList"></div>
+                    </div>
+                    <div class="preview-card">
+                        <h3>Preview</h3>
+                        <img id="previewImage" src="/static/images/puzzel1.png" alt="Selected puzzle preview">
+                    </div>
+                </div>
+            </section>
+
+            <section class="card board-wrapper">
+                <div class="controls">
+                    <button class="btn" id="startButton">Start Puzzle</button>
+                    <button class="btn" id="resetButton">Reset Puzzle</button>
+                    <div class="message" id="statusMessage">Click a piece, then click another to swap.</div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-block">
+                        <span class="label">Moves</span>
+                        <span class="value" id="moveCount">0</span>
+                    </div>
+                    <div class="stat-block">
+                        <span class="label">Time</span>
+                        <span class="value" id="timeCount">0s</span>
+                    </div>
+                    <div class="stat-block">
+                        <span class="label">Puzzle</span>
+                        <span class="value" id="puzzleCount">1 / 8</span>
+                    </div>
+                </div>
+                <div class="puzzle-board" id="puzzleBoard"></div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const puzzles = [
+            'puzzel1.png',
+            'puzzel2.png',
+            'puzzel3.png',
+            'puzzel4.png',
+            'puzzel5.png',
+            'puzzel6.png',
+            'puzzel7.png',
+            'puzzel8.png'
+        ];
+
+        const thumbnailList = document.getElementById('thumbnailList');
+        const previewImage = document.getElementById('previewImage');
+        const puzzleBoard = document.getElementById('puzzleBoard');
+        const startButton = document.getElementById('startButton');
+        const resetButton = document.getElementById('resetButton');
+        const moveCountLabel = document.getElementById('moveCount');
+        const timeCountLabel = document.getElementById('timeCount');
+        const puzzleCountLabel = document.getElementById('puzzleCount');
+        const statusMessage = document.getElementById('statusMessage');
+
+        let selectedPuzzleIndex = 0;
+        let pieceOrder = [];
+        let selectedPiece = null;
+        let moves = 0;
+        let timerId = null;
+        let seconds = 0;
+        let started = false;
+
+        function initialize() {
+            puzzles.forEach((name, index) => {
+                const thumb = document.createElement('div');
+                thumb.className = 'thumbnail' + (index === 0 ? ' selected' : '');
+                thumb.innerHTML = `<img src="/static/images/${name}" alt="Puzzle ${index + 1}">`;
+                thumb.addEventListener('click', () => selectPuzzle(index));
+                thumbnailList.appendChild(thumb);
+            });
+            updatePreview();
+            buildBoard();
+            updateStats();
+        }
+
+        function selectPuzzle(index) {
+            selectedPuzzleIndex = index;
+            document.querySelectorAll('.thumbnail').forEach((thumb, idx) => {
+                thumb.classList.toggle('selected', idx === index);
+            });
+            updatePreview();
+            resetPuzzle();
+            puzzleCountLabel.textContent = `${selectedPuzzleIndex + 1} / ${puzzles.length}`;
+        }
+
+        function updatePreview() {
+            previewImage.src = `/static/images/${puzzles[selectedPuzzleIndex]}`;
+            previewImage.alt = `Puzzle ${selectedPuzzleIndex + 1}`;
+        }
+
+        function buildBoard() {
+            puzzleBoard.innerHTML = '';
+            pieceOrder = Array.from({ length: 16 }, (_, i) => i);
+            pieceOrder.forEach(index => {
+                const piece = createPiece(index);
+                puzzleBoard.appendChild(piece);
+            });
+        }
+
+        function createPiece(pieceIndex) {
+            const el = document.createElement('button');
+            el.type = 'button';
+            el.className = 'puzzle-piece';
+            el.style.backgroundImage = `url(/static/images/${puzzles[selectedPuzzleIndex]})`;
+            const row = Math.floor(pieceIndex / 4);
+            const col = pieceIndex % 4;
+            el.style.backgroundPosition = `${col * 25}% ${row * 25}%`;
+            el.style.backgroundSize = '400% 400%';
+            el.dataset.piece = pieceIndex;
+            el.addEventListener('click', () => selectBoardPiece(el));
+            return el;
+        }
+
+        function selectBoardPiece(el) {
+            if (!started) return;
+            if (el.classList.contains('selected')) {
+                el.classList.remove('selected');
+                selectedPiece = null;
+                return;
+            }
+            if (selectedPiece) {
+                swapPieces(selectedPiece, el);
+                selectedPiece.classList.remove('selected');
+                selectedPiece = null;
+            } else {
+                selectedPiece = el;
+                el.classList.add('selected');
+            }
+        }
+
+        function swapPieces(el1, el2) {
+            const idx1 = Array.from(puzzleBoard.children).indexOf(el1);
+            const idx2 = Array.from(puzzleBoard.children).indexOf(el2);
+            if (idx1 === idx2) return;
+            const clone1 = el1.cloneNode(true);
+            const clone2 = el2.cloneNode(true);
+            el1.replaceWith(clone2);
+            el2.replaceWith(clone1);
+            clone2.addEventListener('click', () => selectBoardPiece(clone2));
+            clone1.addEventListener('click', () => selectBoardPiece(clone1));
+            moves += 1;
+            moveCountLabel.textContent = moves;
+            checkSolved();
+        }
+
+        function shuffleBoard() {
+            const pieces = Array.from(puzzleBoard.children);
+            for (let i = pieces.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                puzzleBoard.appendChild(pieces[j]);
+                pieces.splice(j, 1);
+            }
+            if (isSolved()) {
+                shuffleBoard();
+            }
+        }
+
+        function startPuzzle() {
+            started = true;
+            moves = 0;
+            seconds = 0;
+            moveCountLabel.textContent = moves;
+            timeCountLabel.textContent = `${seconds}s`;
+            statusMessage.textContent = 'Puzzle started. Click two pieces to swap them.';
+            document.querySelectorAll('.puzzle-piece').forEach(el => el.classList.remove('selected'));
+            selectedPiece = null;
+            startTimer();
+            shuffleBoard();
+        }
+
+        function resetPuzzle() {
+            started = false;
+            moves = 0;
+            seconds = 0;
+            moveCountLabel.textContent = moves;
+            timeCountLabel.textContent = `${seconds}s`;
+            statusMessage.textContent = 'Press Start Puzzle to begin.';
+            clearTimer();
+            buildBoard();
+        }
+
+        function checkSolved() {
+            if (!started) return;
+            if (isSolved()) {
+                clearTimer();
+                started = false;
+                statusMessage.textContent = `Solved in ${moves} moves and ${seconds}s! Well done.`;
+            }
+        }
+
+        function isSolved() {
+            const pieces = Array.from(puzzleBoard.children);
+            return pieces.every((piece, index) => Number(piece.dataset.piece) === index);
+        }
+
+        function startTimer() {
+            clearTimer();
+            timerId = setInterval(() => {
+                seconds += 1;
+                timeCountLabel.textContent = `${seconds}s`;
+            }, 1000);
+        }
+
+        function clearTimer() {
+            if (timerId) clearInterval(timerId);
+            timerId = null;
+        }
+
+        startButton.addEventListener('click', () => {
+            if (!started) startPuzzle();
+        });
+        resetButton.addEventListener('click', resetPuzzle);
+
+        window.addEventListener('load', initialize);
+    </script>
+</body>
+</html>

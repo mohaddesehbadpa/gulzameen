@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desert Caravan Runner - Gulzameen (Balochistan)</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .runner-header { max-width: 1120px; margin: 0 auto 20px auto; }
+        .runner-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 24px; }
+        .runner-panel { background: #fff7f0; border: 1px solid #f1e1cc; border-radius: 24px; padding: 24px; }
+        .runner-info { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; margin-bottom: 18px; }
+        .runner-info h3 { margin: 0; color: #7d4f29; }
+        .runner-stats { display: flex; flex-wrap: wrap; gap: 14px; color: #5c3a1a; font-weight: 700; }
+        .runner-stats span { background: #fff3d9; border-radius: 14px; padding: 10px 14px; display: inline-flex; align-items: center; gap: 8px; }
+        .runner-board { position: relative; border-radius: 24px; overflow: hidden; background: linear-gradient(180deg, #fbe7cc 0%, #fde4ba 45%, #f9ddb5 100%); box-shadow: 0 16px 34px rgba(0,0,0,0.12); }
+        #gameCanvas { display: block; width: 100%; height: auto; }
+        .runner-controls { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
+        .runner-controls button { min-width: 120px; }
+        .runner-sidebar { display: grid; gap: 20px; }
+        .sidebar-card { background: #fffdf8; border: 1px solid #f2e5d2; border-radius: 20px; padding: 22px; }
+        .sidebar-card h4 { margin-top: 0; color: #8b4513; }
+        .sidebar-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+        .sidebar-list li { display: flex; align-items: center; gap: 12px; color: #5c3a1a; font-weight: 600; }
+        .collect-icon, .obstacle-icon { display: inline-flex; width: 34px; height: 34px; border-radius: 50%; align-items: center; justify-content: center; background: #fff3d9; font-size: 1.1rem; }
+        .sidebar-note { color: #6a4a2a; line-height: 1.7; }
+        #gameMessage { margin-top: 18px; padding: 16px; border-radius: 16px; display: none; font-weight: 700; text-align: center; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="/static/images/logo.svg" alt="Gulzameen (Balochistan) logo" class="logo-img" style="height:40px; margin-right:10px;" />
+                <span>Gulzameen (Balochistan)</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link">Explore</a></li>
+                <li><a href="/#regions" class="nav-link">Regions</a></li>
+                <li><a href="/#culture" class="nav-link">Culture</a></li>
+                <li><a href="/collaborate" class="nav-link">Collaborate</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <section class="page-section" style="max-width:1120px;margin:40px auto;">
+            <div class="section-header runner-header">
+                <a href="/" class="back-link" style="text-decoration:none;color:#8B4513;margin-bottom:20px;display:inline-block;">
+                    <i class="fas fa-arrow-left"></i> Back to Home
+                </a>
+                <h2 style="margin-top:0;"><i class="fas fa-route"></i> Desert Caravan Runner</h2>
+                <p>Guide a camel caravan across desert dunes and mountain passes. Collect cultural symbols, books, instruments, and handicrafts while avoiding storm obstacles.</p>
+            </div>
+
+            <div class="runner-grid">
+                <div class="runner-panel">
+                    <div class="runner-info">
+                        <div>
+                            <h3>Caravan Trail</h3>
+                            <p style="margin:0;color:#6c4a2b;">Use the Up/Down arrow keys or the buttons below to move the caravan.</p>
+                        </div>
+                        <div class="runner-stats">
+                            <span><i class="fas fa-star"></i> <span id="score">0</span> Score</span>
+                            <span><i class="fas fa-heart"></i> <span id="health">3</span> Health</span>
+                            <span><i class="fas fa-tachometer-alt"></i> <span id="speed">1</span> Speed</span>
+                        </div>
+                    </div>
+
+                    <div class="runner-board">
+                        <canvas id="gameCanvas" width="840" height="420"></canvas>
+                        <div id="gameMessage"></div>
+                    </div>
+
+                    <div class="runner-controls">
+                        <button id="moveUpBtn" class="btn btn-primary">Move Up</button>
+                        <button id="moveDownBtn" class="btn btn-primary">Move Down</button>
+                        <button id="startGameBtn" class="btn">Start Game</button>
+                        <button id="resetGameBtn" class="btn">Reset</button>
+                    </div>
+                </div>
+
+                <div class="runner-sidebar">
+                    <div class="sidebar-card">
+                        <h4>Collectibles</h4>
+                        <ul class="sidebar-list">
+                            <li><span class="collect-icon">📜</span> Cultural Symbols</li>
+                            <li><span class="collect-icon">📚</span> Books</li>
+                            <li><span class="collect-icon">🎻</span> Instruments</li>
+                            <li><span class="collect-icon">🧵</span> Handicrafts</li>
+                        </ul>
+                    </div>
+                    <div class="sidebar-card">
+                        <h4>Obstacles</h4>
+                        <ul class="sidebar-list">
+                            <li><span class="obstacle-icon">⛈️</span> Storm Clouds</li>
+                        </ul>
+                        <p class="sidebar-note">Avoid storms to keep the caravan healthy. Each storm hit reduces health by one. Reach the end of the trail for a cultural voyage reward.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <section id="feedback" class="feedback-section" style="background:#fff;padding:28px 16px;border-top:1px solid #efe7dd;margin-top:40px;">
+        <div style="max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-start;gap:18px;flex-wrap:wrap;">
+            <div style="flex:1;min-width:320px;">
+                <h3 style="color:var(--color-brown);margin:0 0 8px 0;">Share Your Journey</h3>
+                <p style="color:#666;margin:0 0 12px 0;">Tell us what cultural treasures you collected along the caravan route.</p>
+                <a href="/collaborate" class="btn btn-primary" style="display:inline-block;">Contribute a Story</a>
+            </div>
+            <div style="width:260px;min-width:200px;">
+                <h4 style="margin:0 0 8px 0;color:var(--color-brown);">Explore More</h4>
+                <p style="color:#666;margin:0 0 12px 0;">Try other interactive cultural missions.</p>
+                <a href="/" class="btn btn-primary" style="display:inline-block;">Back to Home</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section footer-brand">
+                <h2 class="footer-title">Gulzameen (Balochistan)</h2>
+                <p class="footer-description">A living digital ecosystem celebrating the rich cultural heritage of Balochistan.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/static/main.js"></script>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width;
+        const height = canvas.height;
+
+        const state = {
+            running: false,
+            score: 0,
+            health: 3,
+            speed: 2,
+            playerY: height / 2 - 28,
+            playerHeight: 56,
+            playerWidth: 96,
+            items: [],
+            obstacles: [],
+            spawnTimer: 0,
+            frame: 0,
+            messageVisible: false
+        };
+
+        const collectibles = [
+            { label: 'Cultural Symbol', icon: '📜', color: '#b97b37', points: 15 },
+            { label: 'Books', icon: '📚', color: '#4c6b9f', points: 20 },
+            { label: 'Instrument', icon: '🎻', color: '#8a4c39', points: 18 },
+            { label: 'Handicraft', icon: '🧵', color: '#7a5a37', points: 22 }
+        ];
+
+        const obstacleIcon = '⛈️';
+
+        const hud = {
+            score: document.getElementById('score'),
+            health: document.getElementById('health'),
+            speed: document.getElementById('speed'),
+            status: document.getElementById('gameMessage'),
+            statusLabel: document.getElementById('gameMessage')
+        };
+
+        function drawBackground() {
+            ctx.fillStyle = '#f9e2be';
+            ctx.fillRect(0, 0, width, height);
+
+            for (let i = 0; i < 6; i++) {
+                const y = 40 + (i * 50) + Math.sin((state.frame + i * 20) * 0.04) * 12;
+                ctx.fillStyle = i % 2 === 0 ? '#e4c090' : '#d7ab6a';
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.bezierCurveTo(120, y + 20, 260, y - 18, 420, y + 12);
+                ctx.bezierCurveTo(520, y + 40, 640, y - 10, 840, y + 20);
+                ctx.lineTo(840, height);
+                ctx.lineTo(0, height);
+                ctx.closePath();
+                ctx.fill();
+            }
+        }
+
+        function drawCaravan() {
+            const x = 90;
+            const y = state.playerY;
+            ctx.save();
+            ctx.translate(x, y);
+
+            ctx.fillStyle = '#8b5a24';
+            ctx.fillRect(0, 18, 88, 30);
+            ctx.fillStyle = '#c2843f';
+            ctx.fillRect(10, 0, 68, 30);
+            ctx.fillStyle = '#422714';
+            ctx.beginPath();
+            ctx.arc(70, 46, 14, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(18, 46, 14, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#e0b07a';
+            ctx.fillRect(12, 6, 54, 18);
+            ctx.fillStyle = '#7d4d23';
+            ctx.fillRect(42, -12, 18, 26);
+            ctx.restore();
+        }
+
+        function drawItem(item) {
+            ctx.fillStyle = item.color;
+            ctx.strokeStyle = '#7f4f30';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(item.x, item.y, item.radius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            ctx.font = '24px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = '#fff';
+            ctx.fillText(item.icon, item.x, item.y + 1);
+        }
+
+        function drawObstacle(obstacle) {
+            ctx.font = '32px serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(obstacle.icon, obstacle.x, obstacle.y);
+        }
+
+        function spawnObject() {
+            const y = 60 + Math.random() * (height - 120);
+            if (Math.random() < 0.7) {
+                const collectible = collectibles[Math.floor(Math.random() * collectibles.length)];
+                state.items.push({
+                    ...collectible,
+                    x: width + 60,
+                    y,
+                    radius: 24,
+                    collected: false
+                });
+            } else {
+                state.obstacles.push({
+                    x: width + 70,
+                    y,
+                    icon: obstacleIcon,
+                    width: 58,
+                    height: 44,
+                    hit: false
+                });
+            }
+        }
+
+        function movePlayer(direction) {
+            if (!state.running) return;
+            state.playerY += direction * 40;
+            state.playerY = Math.max(20, Math.min(height - state.playerHeight - 20, state.playerY));
+        }
+
+        function updateObjects() {
+            state.items.forEach(item => {
+                item.x -= 3 + state.speed;
+            });
+            state.obstacles.forEach(obs => {
+                obs.x -= 4 + state.speed;
+            });
+            state.items = state.items.filter(item => item.x > -40 && !item.collected);
+            state.obstacles = state.obstacles.filter(obs => obs.x > -40 && !obs.hit);
+        }
+
+        function detectCollisions() {
+            const playerRect = { x: 90, y: state.playerY, width: state.playerWidth, height: state.playerHeight };
+
+            state.items.forEach(item => {
+                const dx = Math.abs(item.x - (playerRect.x + playerRect.width / 2));
+                const dy = Math.abs(item.y - (playerRect.y + playerRect.height / 2));
+                if (dx < 40 && dy < 40 && !item.collected) {
+                    item.collected = true;
+                    state.score += item.points;
+                    state.speed = Math.min(5, 1 + Math.floor(state.score / 100));
+                    updateHUD();
+                }
+            });
+
+            state.obstacles.forEach(obs => {
+                const dx = Math.abs(obs.x - (playerRect.x + playerRect.width / 2));
+                const dy = Math.abs(obs.y - (playerRect.y + playerRect.height / 2));
+                if (dx < 48 && dy < 38 && !obs.hit) {
+                    obs.hit = true;
+                    state.health -= 1;
+                    state.health = Math.max(0, state.health);
+                    updateHUD();
+                    showMessage('Storm hit! Caravan health decreased.', '#ffe0d1', '#a33a1b');
+                    if (state.health <= 0) {
+                        endGame(false);
+                    }
+                }
+            });
+        }
+
+        function drawHUDOverlay() {
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
+            ctx.fillRect(16, 16, 190, 76);
+            ctx.fillStyle = '#7d4e25';
+            ctx.font = '16px sans-serif';
+            ctx.fillText(`Score: ${state.score}`, 30, 38);
+            ctx.fillText(`Health: ${state.health}`, 30, 62);
+            ctx.fillText(`Speed: ${state.speed}`, 30, 86);
+        }
+
+        function drawScene() {
+            drawBackground();
+            state.items.forEach(drawItem);
+            state.obstacles.forEach(drawObstacle);
+            drawCaravan();
+            drawHUDOverlay();
+        }
+
+        function showMessage(text, bg, color) {
+            const status = document.getElementById('gameMessage');
+            status.textContent = text;
+            status.style.display = 'block';
+            status.style.background = bg;
+            status.style.color = color;
+            state.messageVisible = true;
+            setTimeout(() => {
+                if (state.running) {
+                    status.style.display = 'none';
+                    state.messageVisible = false;
+                }
+            }, 2200);
+        }
+
+        function updateHUD() {
+            document.getElementById('score').textContent = state.score;
+            document.getElementById('health').textContent = state.health;
+            document.getElementById('speed').textContent = state.speed;
+        }
+
+        function endGame(won) {
+            state.running = false;
+            const status = document.getElementById('gameMessage');
+            status.style.display = 'block';
+            if (won) {
+                status.style.background = '#e7f5e9';
+                status.style.color = '#25603c';
+                status.textContent = 'You guided the caravan safely through the desert! Well done!';
+            } else {
+                status.style.background = '#fde8e8';
+                status.style.color = '#983222';
+                status.textContent = 'The caravan had to stop. Try again to reach the oasis!';
+            }
+        }
+
+        function gameLoop() {
+            if (!state.running) return;
+            state.frame += 1;
+            if (state.frame % 80 === 0) {
+                spawnObject();
+            }
+            updateObjects();
+            detectCollisions();
+            drawScene();
+            if (state.running) {
+                window.requestAnimationFrame(gameLoop);
+            }
+        }
+
+        function startGame() {
+            if (state.running) return;
+            state.running = true;
+            state.score = 0;
+            state.health = 3;
+            state.speed = 1;
+            state.items = [];
+            state.obstacles = [];
+            state.playerY = height / 2 - 28;
+            state.spawnTimer = 0;
+            state.frame = 0;
+            updateHUD();
+            document.getElementById('gameMessage').style.display = 'none';
+            drawScene();
+            window.requestAnimationFrame(gameLoop);
+        }
+
+        function resetGame() {
+            state.running = false;
+            state.score = 0;
+            state.health = 3;
+            state.speed = 1;
+            state.items = [];
+            state.obstacles = [];
+            state.playerY = height / 2 - 28;
+            state.spawnTimer = 0;
+            state.frame = 0;
+            updateHUD();
+            document.getElementById('gameMessage').style.display = 'none';
+            drawScene();
+        }
+
+        window.addEventListener('keydown', event => {
+            if (!state.running) return;
+            if (event.key === 'ArrowUp') {
+                movePlayer(-1);
+                event.preventDefault();
+            }
+            if (event.key === 'ArrowDown') {
+                movePlayer(1);
+                event.preventDefault();
+            }
+        });
+
+        document.getElementById('moveUpBtn').addEventListener('click', () => movePlayer(-1));
+        document.getElementById('moveDownBtn').addEventListener('click', () => movePlayer(1));
+        document.getElementById('startGameBtn').addEventListener('click', startGame);
+        document.getElementById('resetGameBtn').addEventListener('click', resetGame);
+
+        resetGame();
+    </script>
+</body>
+</html>

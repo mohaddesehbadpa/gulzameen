@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gulzameen (Balochistan) - A Living Digital Culture</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="/static/images/logo.svg" alt="Gulzameen (Balochistan) logo" class="logo-img" style="height:40px; margin-right:10px;" />
+                <span>Gulzameen (Balochistan)</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link">Explore</a></li>
+                <li><a href="#regions" class="nav-link">Regions</a></li>
+                <li><a href="#culture" class="nav-link">Culture</a></li>
+                <li><a href="/collaborate" class="nav-link">Collaborate</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        
+<section class="page-section">
+  <div class="section-header">
+    <h2>Collaborate With Us</h2>
+    <p>Share a story, song, recipe or other cultural contribution.</p>
+  </div>
+
+  <div class="collab-form">
+    
+
+    <form id="collabForm" enctype="multipart/form-data">
+      <label for="name">Your Name *</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="category">Select What You Have *</label>
+      <select id="category" name="category" required>
+        <option value="Folk Story">Folk Story</option>
+        <option value="Traditional Song">Traditional Song</option>
+        <option value="Recipe">Recipe</option>
+        <option value="Melody (Saoth)">Melody (Saoth)</option>
+        <option value="Quiz">Quiz</option>
+        <option value="Cultural Treasure (Bathal)">Cultural Treasure (Bathal)</option>
+        <option value="Activity">Activity</option>
+      </select>
+
+      <label for="title">Title / Name</label>
+      <input type="text" id="title" name="title">
+
+      <label for="region">Region / Section *</label>
+      <select id="region" name="region" required>
+        <option value="">Select region</option>
+        <option value="Eastern">Eastern</option>
+        <option value="Western">Western</option>
+        <option value="Southern">Southern</option>
+      </select>
+
+      <label for="contentType">Content Type *</label>
+      <select id="contentType" name="contentType" required>
+        <option value="text">Text</option>
+        <option value="audio">Audio File</option>
+        <option value="video">Video File</option>
+        <option value="image">Image File</option>
+        <option value="pdf">PDF Document</option>
+      </select>
+
+      <div id="textContent" class="content-field">
+        <label for="content">Write Content *</label>
+        <textarea id="content" name="content" rows="6" required></textarea>
+      </div>
+
+      <div id="fileContent" class="content-field" style="display:none;">
+        <label for="file">Upload File *</label>
+        <input type="file" id="file" name="file" accept=".mp3,.wav,.mp4,.avi,.mov,.jpg,.jpeg,.png,.gif,.pdf">
+        <small>Supported formats: Audio (MP3, WAV), Video (MP4, AVI, MOV), Images (JPG, PNG, GIF), PDF</small>
+      </div>
+
+      <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:12px;align-items:center;flex-wrap:wrap;">
+        <span id="collabMessage" style="color:#2d6a4f;font-size:0.95rem;"></span>
+        <div style="margin-left:auto;display:flex;gap:12px;">
+          <a href="/" class="btn" style="background:transparent;border:1px solid #e6e0d8;">Cancel</a>
+          <button class="btn btn-primary" type="submit">Collaborate</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<section class="page-section">
+  <div class="section-header">
+    <h2>Recent Community Contributions</h2>
+    <p>Browse the latest submitted stories, songs, recipes and cultural contributions.</p>
+  </div>
+
+  <div id="recentContributions" class="contributions-list" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
+    <p style="color:#999;grid-column:1/-1;text-align:center;padding:40px 20px;">Loading recent contributions...</p>
+  </div>
+</section>
+
+<script>
+(function(){
+  var form = document.getElementById('collabForm');
+  var message = document.getElementById('collabMessage');
+  var contentTypeSelect = document.getElementById('contentType');
+  var textContent = document.getElementById('textContent');
+  var fileContent = document.getElementById('fileContent');
+  var contentTextarea = document.getElementById('content');
+  var fileInput = document.getElementById('file');
+
+  // Handle content type switching
+  contentTypeSelect.addEventListener('change', function(){
+    var selectedType = contentTypeSelect.value;
+    if (selectedType === 'text') {
+      textContent.style.display = 'block';
+      fileContent.style.display = 'none';
+      contentTextarea.required = true;
+      fileInput.required = false;
+    } else {
+      textContent.style.display = 'none';
+      fileContent.style.display = 'block';
+      contentTextarea.required = false;
+      fileInput.required = true;
+    }
+  });
+
+  function renderContributionCard(contribution) {
+    var card = document.createElement('div');
+    card.className = 'story-card';
+    card.style.background = '#fff';
+    card.style.border = '1px solid #e3d8c5';
+    card.style.padding = '20px';
+    card.style.borderRadius = '10px';
+    card.style.boxShadow = '0 8px 28px rgba(0,0,0,0.06)';
+
+    var title = contribution.title || 'Untitled contribution';
+    var region = contribution.region || 'Region not specified';
+    var category = contribution.category || 'Contribution';
+    var timestamp = contribution.timestamp || '';
+    var contentText = contribution.content || '';
+
+    card.innerHTML =
+      '<div style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;">' +
+        '<div>' +
+          '<h3 style="margin:0 0 8px 0;color:#8B4513;font-size:1.1rem;">' + title + '</h3>' +
+          '<p style="margin:0;color:#666;font-size:0.9rem;"><strong>' + category + '</strong> • ' + region + '</p>' +
+        '</div>' +
+        '<p style="margin:0;color:#999;font-size:0.8rem;">' + timestamp + '</p>' +
+      '</div>' +
+      '<p style="margin:0;color:#444;line-height:1.6;max-height:138px;overflow:hidden;text-overflow:ellipsis;">' +
+        (contentText ? contentText.replace(/\n/g, '<br>') : 'No text content available.') +
+      '</p>';
+
+    return card;
+  }
+
+  function loadRecentContributions() {
+    var container = document.getElementById('recentContributions');
+    if (!container) return;
+
+    container.innerHTML = '<p style="color:#999;grid-column:1/-1;text-align:center;padding:40px 20px;">Loading recent contributions...</p>';
+
+    fetch('/api/collaborate?all=true&limit=5')
+      .then(function(response) { return response.json(); })
+      .catch(function() { return []; })
+      .then(function(contributions) {
+        if (!Array.isArray(contributions) || contributions.length === 0) {
+          container.innerHTML = '<p style="color:#999;grid-column:1/-1;text-align:center;padding:40px 20px;">No recent contributions yet. Submit yours first!</p>';
+          return;
+        }
+
+        container.innerHTML = '';
+        contributions.forEach(function(item) {
+          container.appendChild(renderContributionCard(item));
+        });
+      });
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+
+    var name = document.getElementById('name').value.trim();
+    var category = document.getElementById('category').value.trim();
+    var title = document.getElementById('title').value.trim();
+    var region = document.getElementById('region').value.trim();
+    var contentType = document.getElementById('contentType').value.trim();
+
+    if (!name || !category) {
+      message.style.color = '#b1533d';
+      message.textContent = 'Please provide name and category.';
+      return;
+    }
+
+    if (contentType === 'text') {
+      var content = document.getElementById('content').value.trim();
+      if (!content) {
+        message.style.color = '#b1533d';
+        message.textContent = 'Please write your contribution.';
+        return;
+      }
+    } else {
+      var file = document.getElementById('file').files[0];
+      if (!file) {
+        message.style.color = '#b1533d';
+        message.textContent = 'Please select a file to upload.';
+        return;
+      }
+    }
+
+    message.style.color = '#2d6a4f';
+    message.textContent = 'Submitting...';
+
+    // Create FormData for file upload
+    var formData = new FormData();
+    formData.append('name', name);
+    formData.append('category', category);
+    formData.append('title', title);
+    formData.append('region', region);
+    formData.append('contentType', contentType);
+
+    if (contentType === 'text') {
+      formData.append('content', document.getElementById('content').value.trim());
+    } else {
+      formData.append('file', file);
+    }
+
+    fetch('/api/collaborate', {
+      method: 'POST',
+      body: formData
+    })
+    .then(function(response) {
+      return response.json().then(function(data) {
+        if (!response.ok) {
+          throw new Error(data.error || 'Unable to submit collaboration.');
+        }
+        return data;
+      });
+    })
+    .then(function(data) {
+      message.style.color = '#2d6a4f';
+      message.textContent = 'Thank you! Your contribution has been shared. It will appear in recent submissions below.';
+      form.reset();
+      // Reset display
+      textContent.style.display = 'block';
+      fileContent.style.display = 'none';
+      contentTextarea.required = true;
+      fileInput.required = false;
+      loadRecentContributions();
+    })
+    .catch(function(error) {
+      message.style.color = '#b1533d';
+      message.textContent = error.message;
+    });
+  });
+
+  loadRecentContributions();
+})();
+</script>
+
+    </main>
+
+    <!-- Feedback Section (bottom of app, placed above footer) -->
+    <section id="feedback" class="feedback-section" style="background:#fff;padding:28px 16px;border-top:1px solid #efe7dd;">
+        <div style="max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-start;gap:18px;flex-wrap:wrap;">
+            <div style="flex:1;min-width:320px;">
+                <h3 style="color:var(--color-brown);margin:0 0 8px 0;">Community Feedback</h3>
+                <p style="color:#666;margin:0 0 12px 0;">What visitors say about this project. Add your feedback <a href="/feedback">here</a>.</p>
+
+                
+                <p style="color:#666;">No feedback yet — be the first to share your thoughts <a href="/feedback">here</a>.</p>
+                
+            </div>
+
+            <div style="width:260px;min-width:200px;">
+                <h4 style="margin:0 0 8px 0;color:var(--color-brown);">Share Feedback</h4>
+                <p style="color:#666;margin:0 0 12px 0;">Quick feedback helps guide improvements.</p>
+                <a href="/feedback" class="btn btn-primary" style="display:inline-block;">Give Feedback</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <!-- Left Section: Branding -->
+            <div class="footer-section footer-brand">
+                <h2 class="footer-title">Gulzameen (Balochistan)</h2>
+                <p class="footer-description">A living digital ecosystem celebrating the rich cultural heritage of Balochistan. Every visit, every contribution shapes our shared cultural story.</p>
+                
+                <div class="footer-creator">
+                    <strong>Project by: Mohaddeseh Badpa</strong>
+                    <a href="https://instagram.com/mohaddeseh.badpa" target="_blank" title="Instagram">
+                        <i class="fab fa-instagram"></i> @mohaddeseh.badpa
+                    </a>
+                    <a href="https://twitter.com/mohaddesehbadpa" target="_blank" title="Twitter" style="margin-left:10px;">
+                        <i class="fab fa-twitter"></i> @mohaddesehbadpa
+                    </a>
+                    <a href="https://github.com/mohaddesehbadpa" target="_blank" title="GitHub" style="margin-left:10px;">
+                        <i class="fab fa-github"></i> mohaddesehbadpa
+                    </a>
+                </div>
+            </div>
+
+            <!-- Middle Section: Explore -->
+            <div class="footer-section">
+                <h4>Explore</h4>
+                <ul>
+                    <li><a href="/region/eastern">Regions</a></li>
+                    <li><a href="#stories">Stories</a></li>
+                    <li><a href="#music">Music</a></li>
+                    <li><a href="#patterns">Patterns</a></li>
+                    <li><a href="#recipes">Recipes</a></li>
+                    <li><a href="#festivals">Festivals</a></li>
+                </ul>
+            </div>
+
+            <!-- Right Section: Community -->
+            <div class="footer-section">
+                <h4>Community</h4>
+                <ul>
+                    <li><a href="#contribute">Contribute</a></li>
+                    <li><a href="#missions">Missions</a></li>
+                    <li><a href="#leaderboard">Leaderboard</a></li>
+                    <li><a href="#events">Events</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+
+            <!-- Legal Section -->
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                    <li><a href="#terms">Terms of Service</a></li>
+                    <li><a href="#cookies">Cookie Settings</a></li>
+                    <li><a href="#copyright">Copyright Info</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Social Icons -->
+        <div class="footer-social">
+            <a href="https://instagram.com/mohaddeseh.badpa" target="_blank" title="Instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://twitter.com" target="_blank" title="Twitter">
+                <i class="fab fa-twitter"></i>
+            </a>
+            <a href="https://github.com" target="_blank" title="GitHub">
+                <i class="fab fa-github"></i>
+            </a>
+            <a href="https://instagram.com/mohaddeseh.badpa" target="_blank" title="Instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://twitter.com/mohaddesehbadpa" target="_blank" title="Twitter">
+                <i class="fab fa-twitter"></i>
+            </a>
+            <a href="https://github.com/mohaddesehbadpa" target="_blank" title="GitHub">
+                <i class="fab fa-github"></i>
+            </a>
+            <a href="mailto:mohaddesehbadpa0@gmail.com" title="Email">
+                <i class="fas fa-envelope"></i>
+            </a>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            <p>&copy; 2025 Gulzameen (Balochistan). Preserving culture, one story at a time.</p>
+            <p>Made with <span class="heart">❤</span> by Mohaddeseh Badpa</p>
+            <p class="footer-thanks">A heartfelt thanks to Kamran Ayub and Jahanzeb Baloch for their support and love.</p>
+        </div>
+    </footer>
+
+    <script src="/static/main.js"></script>
+    <script src="/static/ads.js"></script>
+</body>
+</html>

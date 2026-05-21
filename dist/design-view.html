@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Pattern - Gulzameen</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%);
+            color: #f2eee5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .navbar {
+            background: rgba(10, 8, 6, 0.8);
+            backdrop-filter: blur(12px);
+            padding: 16px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .nav-logo img {
+            height: 28px;
+            opacity: 0.8;
+        }
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            gap: 28px;
+        }
+        .nav-link {
+            text-decoration: none;
+            color: #b8a48c;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #e8d8e8;
+        }
+        .design-view-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        .design-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .design-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #f2eee5;
+        }
+        .design-subtitle {
+            font-size: 1.1rem;
+            color: #d4af37;
+            opacity: 0.9;
+        }
+        .design-image-container {
+            position: relative;
+            max-width: 90vw;
+            max-height: 70vh;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(12px);
+            border: 2px solid rgba(212, 165, 116, 0.2);
+        }
+        .design-image {
+            width: 100%;
+            height: auto;
+            max-height: 70vh;
+            object-fit: contain;
+            display: block;
+        }
+        .design-info {
+            margin-top: 32px;
+            text-align: center;
+            max-width: 600px;
+        }
+        .design-description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #e9e1cf;
+            margin-bottom: 24px;
+        }
+        .design-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 12px 24px;
+            border-radius: 999px;
+            border: 1px solid rgba(212,165,116,0.35);
+            background: rgba(212,165,116,0.12);
+            color: #f2eee2;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn:hover {
+            background: rgba(212,165,116,0.22);
+            transform: translateY(-2px);
+        }
+        .btn-primary {
+            background: #d4af37;
+            color: #111;
+            border-color: #d4af37;
+        }
+        .btn-primary:hover {
+            background: #b8860b;
+            color: #111;
+        }
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #d4af37;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(10, 8, 6, 0.6);
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+        }
+        .back-link:hover {
+            background: rgba(10, 8, 6, 0.8);
+            transform: translateY(-1px);
+        }
+        @media (max-width: 768px) {
+            .design-view-container {
+                padding: 20px 15px;
+            }
+            .design-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="/static/images/logo.svg" alt="Gulzameen" />
+                <span>Gulzameen (Balochistan)</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/#regions" class="nav-link">Regions</a></li>
+                <li><a href="/collaborate" class="nav-link">Collaborate</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="design-view-container">
+        <a href="javascript:history.back()" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to Region
+        </a>
+
+        <div class="design-header">
+            <h1 class="design-title" id="designTitle">Design Pattern</h1>
+            <p class="design-subtitle" id="designRegion">Balochistan Traditional Embroidery</p>
+        </div>
+
+        <div class="design-image-container">
+            <img id="designImage" class="design-image" src="" alt="Design Pattern" />
+        </div>
+
+        <div class="design-info">
+            <p class="design-description" id="designDescription">
+                This traditional Balochi embroidery pattern represents the rich cultural heritage and artistic craftsmanship of the Baloch people.
+                Each stitch tells a story of tradition, skill, and cultural identity passed down through generations.
+            </p>
+            <div class="design-actions">
+                <a href="/collaborate" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Contribute Similar Design
+                </a>
+                <button onclick="downloadImage()" class="btn">
+                    <i class="fas fa-download"></i> Download Image
+                </button>
+                <button onclick="shareDesign()" class="btn">
+                    <i class="fas fa-share"></i> Share Design
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get URL parameters
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            const results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        // Pattern data
+        const patterns = {
+            'image1': {
+                name: 'اوپار',
+                region: 'Balochistan Traditional Embroidery',
+                description: 'اوپار (Opar) is a traditional Balochi embroidery pattern characterized by intricate geometric designs and flowing motifs. This pattern represents the artistic heritage of Baloch craftsmanship, featuring symmetrical arrangements that symbolize balance and harmony in Balochi culture.'
+            },
+            'image2': {
+                name: 'راسک',
+                region: 'Balochistan Traditional Embroidery',
+                description: 'راسک (Rask) embodies the essence of Balochi textile art with its distinctive patterns and cultural symbolism. This embroidery style showcases the meticulous craftsmanship and artistic vision that has been preserved through generations of Baloch artisans.'
+            },
+            'image3': {
+                name: 'آتار',
+                region: 'Balochistan Traditional Embroidery',
+                description: 'آتار (Atar) represents the pinnacle of Balochi embroidery artistry, featuring complex patterns that tell stories of heritage and tradition. Each stitch in this design carries the weight of cultural identity and artistic excellence.'
+            }
+        };
+
+        // Load design based on URL parameter
+        function loadDesign() {
+            const imageParam = getUrlParameter('image');
+            const regionParam = getUrlParameter('region') || 'eastern';
+
+            if (imageParam && patterns[imageParam]) {
+                const pattern = patterns[imageParam];
+                document.getElementById('designTitle').textContent = pattern.name;
+                document.getElementById('designRegion').textContent = pattern.region;
+                document.getElementById('designDescription').textContent = pattern.description;
+                document.getElementById('designImage').src = `/static/images/${imageParam}.png`;
+                document.getElementById('designImage').alt = `${pattern.name} pattern`;
+            } else {
+                // Default fallback
+                document.getElementById('designTitle').textContent = 'Design Pattern';
+                document.getElementById('designImage').src = '/static/images/image1.png';
+            }
+        }
+
+        // Download image function
+        function downloadImage() {
+            const image = document.getElementById('designImage');
+            const link = document.createElement('a');
+            link.href = image.src;
+            link.download = `${document.getElementById('designTitle').textContent}.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Share design function
+        function shareDesign() {
+            const title = document.getElementById('designTitle').textContent;
+            const url = window.location.href;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: `Balochi Design Pattern: ${title}`,
+                    text: `Check out this beautiful Balochi embroidery pattern: ${title}`,
+                    url: url
+                });
+            } else {
+                // Fallback: copy URL to clipboard
+                navigator.clipboard.writeText(url).then(() => {
+                    alert('Design link copied to clipboard!');
+                });
+            }
+        }
+
+        // Load design on page load
+        window.addEventListener('DOMContentLoaded', loadDesign);
+    </script>
+</body>
+</html>

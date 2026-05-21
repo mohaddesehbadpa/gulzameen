@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Folk Story</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <style>
+    body { background: #fbf7f0; color: #333; font-family: Arial, sans-serif; margin: 0; padding: 0; }
+    .page-wrapper { max-width: 940px; margin: 0 auto; padding: 32px 24px; }
+    .story-card { background: #fff; border-radius: 16px; box-shadow: 0 18px 40px rgba(0,0,0,0.08); padding: 30px; }
+    .story-card h1 { margin-top: 0; color: #3d1f08; }
+    .story-card p { line-height: 1.8; margin: 16px 0; }
+    .story-card blockquote { background: #f7f1e8; border-left: 4px solid #d4af37; margin: 16px 0; padding: 18px 20px; color: #5f4c3f; }
+    .back-link { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px; color: #6c4a30; text-decoration: none; font-weight: 600; }
+    .back-link:hover { text-decoration: underline; }
+    .region-label { display: inline-block; margin-bottom: 16px; color: #8b5829; font-weight: 700; }
+    .story-credit { margin-top: 26px; color: #6d5d54; font-style: italic; }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    <a id="backLink" class="back-link" href="/">← Back to Regions</a>
+    <div class="story-card">
+      <div id="regionLabel" class="region-label"></div>
+      <h1 id="storyTitle">Folk Story</h1>
+      <div id="storyBody"></div>
+      <p id="storyCredit" class="story-credit"></p>
+    </div>
+  </div>
+
+  <script>
+    const stories = {
+      western: {
+        "janekkani-thambo": {
+          title: "Janekkani Thambo",
+          regionLabel: "Baloch of Western Region",
+          content: `A place in Iranian Balochistan, located near a rural mountainous region, is known for a ghostly folk story. The place is surrounded by high mountains. According to the legend, one day seven girls came there to play. While they were sitting under a mountain and enjoying themselves, a part of the mountain suddenly broke and fell on them. Sadly, the girls could not survive and died in the accident.
+
+Since that tragic day, people living near the area believe that the souls of those seven girls still remain there as ghosts. Because of this belief, the place became known as “Janekkani Thambo.” It is a famous folk story in the region.",
+          credit: "A haunting western Baloch folk tale of loss and lingering spirits."
+        }
+      },
+      eastern: {
+        "chaukandi-e-kabristan": {
+          title: "Chaukandi-e-Kabristan",
+          regionLabel: "Baloch of Eastern Region",
+          content: `Once upon a time, there was a village that later became a graveyard and came to be known as “Chaukandi-e-Kabristan.” According to a famous folk story, a woman once saw a lizard enter her house and spoil her clarified butter (ghee). When she noticed it, she picked up a stick to kill the lizard.
+
+However, the lizard escaped and ran into another house, where it hid under a baby’s bed. When the woman followed it there to kill it, the lady of that house stopped her and said, “The lizard came under my baby’s bed seeking protection, so now it is my responsibility. I will not let you kill it, even if you try to kill me first.”
+
+The first woman angrily replied, “Let me see how you stop me. I will kill that lizard no matter what.”
+
+Soon, the people of the village took sides. Some supported the first woman, while others supported the lady protecting the lizard. Because of this conflict, the whole village became divided into two groups, and a deadly war began. Tragically, none of them survived, and the entire village eventually turned into a graveyard.
+
+That is how the place became known as “Chaukandi-e-Kabristan.” There is also a famous Balochi saying related to this story:
+
+“Che e neem a shasth, che a neem a panja, durahen bagada kotan yak jah.”
+
+This story is still remembered as a folk tale in the region.",
+          credit: "An eastern Baloch legend about unity, conflict, and the ruin of a village."
+        }
+      },
+      southern: {
+        "hani-o-sheymureed": {
+          title: "Hani O Sheymureed",
+          regionLabel: "Baloch of Southern Region",
+          content: `The epic of Hani and Sheh Mureed is the most celebrated tragic romance in Balochi folklore, dating back to the 15th century during the reign of Mir Chakar Khan Rind. It is a story of love, extreme devotion, honor, and spiritual transformation.
+
+Sheh Mureed was the son of a revered Baloch noble, Sheh Mubarak. He was an elite warrior, a master archer, and a highly respected figure in the Rind tribe. Hani was the daughter of Mir Mandosh—a woman famed across the land for her immense beauty, sharp intelligence, and flawless character.
+
+Mureed and Hani were deeply in love and legally betrothed to one another. Their future together seemed certain, sealed by ancestral promises and mutual devotion.
+
+In Baloch tribal culture, a qaul (a solemn oath or vow) is sacred and unbreakable. Mir Chakar Khan Rind, the supreme chief of the Baloch tribes, grew intensely jealous of Sheh Mureed's flawless reputation and became infatuated with Hani's beauty. Mir Chakar devised a cunning trap to separate the lovers.
+
+During a grand royal gathering, fueled by wine and pride, Mir Chakar asked his nobles to make unbreakable oaths.
+
+One noble swore never to touch a man who stepped into his home as a guest.
+
+Another swore to kill anyone who touched his bow.
+
+When it was Mureed's turn, he proudly declared: "I swear by the Almighty that if any man asks me for anything on a Thursday morning, I will grant it to him without hesitation."
+
+Mir Chakar had found his window. On the very next Thursday morning, Chakar sent his messengers to Sheh Mureed. The demand they carried shocked the entire tribe: Mir Chakar demanded that Mureed release Hani from their betrothal so that Chakar could marry her.
+
+Mureed was completely devastated. If he refused, he would break his sacred oath, bringing ultimate dishonor to his family and tribe. Bound by the rigid Baloch code of honor, Mureed gave up his claim to Hani.
+
+Mir Chakar married Hani, but the victory was hollow. Hani was deeply heartbroken. She absolutely refused to acknowledge Chakar as her husband, wearing black clothes, living in isolation, and maintaining her spiritual and physical purity in defiance of the forced marriage.
+
+Driven mad by grief and loss, Sheh Mureed abandoned his wealth, his weapons, and his noble status. He put on the simple clothes of a mendicant dervish and left Balochistan. He wandered across the deserts, eventually traveling to Mecca. For 30 years, Mureed lived as a homeless ascetic, dedicating himself entirely to spiritual meditation, though his heart remained anchored to Hani.
+
+After three decades, a group of Baloch pilgrims recognized Mureed in Arabia and persuaded him to return to his homeland of Sibi. He returned unrecognized, a frail, elderly dervish with long hair and weathered skin, begging for alms.
+
+One day, the nobles of Mir Chakar's court were holding an archery contest. None of the young, strong warriors could bend the legendary iron bow of Sheh Mureed, which had sat gathering dust for thirty years. Seeing the old dervish watching, they mockingly challenged him to try.
+
+Mureed stepped forward. He took the heavy bow, closed his eyes, and effortlessly bent it, firing three arrows consecutively into the exact same spot.
+
+The crowd fell silent. Hani, who was watching from behind a curtain, instantly recognized the peerless form of her long lost lover. The sound of the bow snapping back into place confirmed what her heart already knew. She cried out to Mir Chakar, confessing that the old dervish was none other than Sheh Mureed.
+
+Mir Chakar, filled with deep remorse for the decades of misery he had caused the lovers, formally freed Hani and begged for Mureed's forgiveness. He told Mureed to take Hani and finally live out their lives together.
+
+However, three decades of wandering and meditation had transformed Mureed. His earthly love for Hani had evolved into Ishq-e-Haqeeqi (divine, spiritual love). He looked at Hani, acknowledged their eternal bond, but realized his soul no longer belonged to the material world.
+
+Mureed turned back toward the desert. Hani, choosing ultimate devotion over worldly comfort, left the palace and followed him into the wilderness. According to Balochi folklore, as they walked away, the earth opened up and swallowed them together, uniting their souls forever in the afterlife, free from the constraints of tribal laws and material bonds.`,
+          credit: "A southern Baloch epic of love, honor, devotion, and spiritual transformation from the 15th century."
+        }
+      }
+    };
+
+    function getQueryParam(key) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(key);
+    }
+
+    const region = getQueryParam('region');
+    const storyKey = getQueryParam('story');
+    const story = region && storyKey && stories[region] && stories[region][storyKey];
+    const storyTitle = document.getElementById('storyTitle');
+    const storyBody = document.getElementById('storyBody');
+    const regionLabel = document.getElementById('regionLabel');
+    const storyCredit = document.getElementById('storyCredit');
+    const backLink = document.getElementById('backLink');
+
+    if (!story) {
+      storyTitle.textContent = 'Story not found';
+      storyBody.innerHTML = '<p>Sorry, the story you are looking for does not exist. Please return to the region page and select a valid folk story.</p>';
+      regionLabel.textContent = 'Unknown region';
+      backLink.href = '/';
+    } else {
+      storyTitle.textContent = story.title;
+      regionLabel.textContent = story.regionLabel;
+      // Split by double newlines and create paragraphs
+      const paragraphs = story.content.trim().split(/\n\s*\n+/).filter(p => p.trim());
+      storyBody.innerHTML = paragraphs.map(paragraph => `<p>${paragraph.trim()}</p>`).join('');
+      storyCredit.textContent = story.credit;
+      backLink.href = `/region/${region}`;
+    }
+  </script>
+</body>
+</html>
